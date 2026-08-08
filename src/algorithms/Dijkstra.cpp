@@ -61,7 +61,6 @@ AlgoResult Dijkstra::run(Graph& graph, NodeId start, NodeId end) {
     //   Therefore d is the true shortest distance — we can finalise u.
     // -------------------------------------------------------------------------
 
-    int N = graph.numNodes();
     BinaryHeap<double, NodeId> pq;
 
     // Initialise start node
