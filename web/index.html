@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PathFinder Pro — Algorithm Visualizer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header / Glass Top Bar -->
+        <header class="glass-panel header">
+            <div class="logo">
+                <span class="logo-icon">⚡</span>
+                <h1>PathFinder <span class="accent-text">Pro</span></h1>
+            </div>
+            <div class="header-badges">
+                <span class="badge">C++17 Backend</span>
+                <span class="badge">Custom Min-Heap</span>
+            </div>
+        </header>
+
+        <!-- Main Layout -->
+        <div class="main-content">
+            <!-- Sidebar Controls -->
+            <aside class="glass-panel sidebar">
+                <div class="control-group">
+                    <label for="algorithm-select">Algorithm</label>
+                    <select id="algorithm-select" class="glass-input">
+                        <option value="dijkstra">Dijkstra's Algorithm</option>
+                        <option value="astar-manhattan">A* (Manhattan)</option>
+                        <option value="astar-euclidean">A* (Euclidean)</option>
+                        <option value="bfs">Breadth-First Search (BFS)</option>
+                        <option value="bellman-ford">Bellman-Ford</option>
+                    </select>
+                </div>
+
+                <div class="control-group">
+                    <label for="connectivity-select">Connectivity</label>
+                    <select id="connectivity-select" class="glass-input">
+                        <option value="4way">4-Way (N/S/E/W)</option>
+                        <option value="8way">8-Way (Diagonal)</option>
+                    </select>
+                </div>
+
+                <div class="control-group">
+                    <label for="terrain-weight">Brush Tool</label>
+                    <select id="brush-select" class="glass-input">
+                        <option value="wall">Wall (Impassable)</option>
+                        <option value="weight-2">Light Terrain (Cost 2)</option>
+                        <option value="weight-5">Heavy Terrain (Cost 5)</option>
+                        <option value="eraser">Eraser (Normal Cost 1)</option>
+                    </select>
+                </div>
+
+                <div class="control-group">
+                    <label>Maze Generator</label>
+                    <div class="button-row">
+                        <button id="btn-maze-dfs" class="glass-btn secondary">DFS Maze</button>
+                        <button id="btn-maze-prims" class="glass-btn secondary">Prim's Maze</button>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button id="btn-run" class="glass-btn primary">▶ Run Search</button>
+                    <button id="btn-compare" class="glass-btn accent">📊 Compare All</button>
+                    <button id="btn-clear-path" class="glass-btn secondary">Clear Path</button>
+                    <button id="btn-clear-walls" class="glass-btn danger">Clear Board</button>
+                </div>
+
+                <!-- Legend -->
+                <div class="legend">
+                    <h3>Legend & Controls</h3>
+                    <div class="legend-item"><span class="node-icon start"></span> Start Node (Shift+Click)</div>
+                    <div class="legend-item"><span class="node-icon end"></span> Target Node (Ctrl+Click)</div>
+                    <div class="legend-item"><span class="node-icon wall"></span> Wall Node (Click/Drag)</div>
+                    <div class="legend-item"><span class="node-icon weight"></span> Weighted Cell (Cost 2/5)</div>
+                    <div class="legend-item"><span class="node-icon visited"></span> Visited Node</div>
+                    <div class="legend-item"><span class="node-icon path"></span> Shortest Path</div>
+                </div>
+            </aside>
+
+            <!-- Grid Container -->
+            <section class="grid-section">
+                <div class="glass-panel grid-card">
+                    <div id="grid-container" class="grid-container"></div>
+                </div>
+
+                <!-- Live Stats Panel -->
+                <div class="glass-panel stats-panel">
+                    <div class="stat-card">
+                        <span class="stat-label">Nodes Visited</span>
+                        <span id="stat-visited" class="stat-value">0</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Path Length</span>
+                        <span id="stat-length" class="stat-value">0</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Path Cost</span>
+                        <span id="stat-cost" class="stat-value">0</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Execution Time</span>
+                        <span id="stat-time" class="stat-value">0.00 <small>ms</small></span>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Compare All Modal -->
+        <div id="compare-modal" class="modal-overlay hidden">
+            <div class="glass-panel modal-content">
+                <div class="modal-header">
+                    <h2>Algorithm Benchmark Comparison</h2>
+                    <button id="btn-close-modal" class="close-btn">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <table class="glass-table">
+                        <thead>
+                            <tr>
+                                <th>Algorithm</th>
+                                <th>Nodes Visited</th>
+                                <th>Path Length</th>
+                                <th>Path Cost</th>
+                                <th>Execution Time</th>
+                            </tr>
+                        </thead>
+                        <tbody id="compare-table-body">
+                            <!-- Injected dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
