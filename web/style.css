@@ -431,3 +431,263 @@ body {
 .glass-table td {
     font-size: 0.95rem;
 }
+
+/* Location Inputs */
+.location-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.location-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 0.4rem 0.6rem;
+    border-radius: 8px;
+    border: 1px solid var(--panel-border);
+}
+
+.location-badge {
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0.25rem 0.5rem;
+    border-radius: 6px;
+}
+
+.start-badge {
+    background: rgba(0, 230, 118, 0.15);
+    color: var(--node-start);
+    border: 1px solid rgba(0, 230, 118, 0.3);
+}
+
+.end-badge {
+    background: rgba(255, 23, 68, 0.15);
+    color: var(--node-end);
+    border: 1px solid rgba(255, 23, 68, 0.3);
+}
+
+.coord-inputs {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.coord-inputs label {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-weight: 500;
+}
+
+.coord-input {
+    width: 48px;
+    padding: 0.25rem 0.35rem;
+    text-align: center;
+    font-size: 0.85rem;
+}
+
+/* Label with Action (Randomize) */
+.label-with-action {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.4rem;
+}
+
+.text-btn {
+    background: none;
+    border: none;
+    color: var(--accent-cyan);
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.text-btn:hover {
+    background: rgba(0, 242, 254, 0.15);
+    text-decoration: underline;
+}
+
+/* Inline Validation Errors */
+.inline-error {
+    font-size: 0.75rem;
+    color: #ff5252;
+    background: rgba(255, 82, 82, 0.1);
+    border: 1px solid rgba(255, 82, 82, 0.3);
+    padding: 0.35rem 0.6rem;
+    border-radius: 6px;
+    margin-top: 0.2rem;
+    animation: fadeIn 0.2s ease-in;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.mt-2 {
+    margin-top: 0.5rem;
+}
+
+.text-muted {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-weight: normal;
+}
+
+/* 3-State Placement Mode Group */
+.mode-toggle-group {
+    display: flex;
+    gap: 0.35rem;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 4px;
+    border-radius: 10px;
+    border: 1px solid var(--panel-border);
+}
+
+.mode-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.3rem;
+    padding: 0.5rem 0.3rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 7px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.mode-btn:hover {
+    color: var(--text-main);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.mode-btn.active[data-mode="start"] {
+    background: rgba(0, 230, 118, 0.2);
+    color: var(--node-start);
+    border-color: rgba(0, 230, 118, 0.4);
+    box-shadow: 0 0 10px rgba(0, 230, 118, 0.2);
+}
+
+.mode-btn.active[data-mode="end"] {
+    background: rgba(255, 23, 68, 0.2);
+    color: var(--node-end);
+    border-color: rgba(255, 23, 68, 0.4);
+    box-shadow: 0 0 10px rgba(255, 23, 68, 0.2);
+}
+
+.mode-btn.active[data-mode="wall"] {
+    background: rgba(0, 242, 254, 0.2);
+    color: var(--accent-cyan);
+    border-color: rgba(0, 242, 254, 0.4);
+    box-shadow: 0 0 10px rgba(0, 242, 254, 0.2);
+}
+
+/* Grid Status Bar */
+.grid-status-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 0.6rem 1.2rem;
+    font-size: 0.85rem;
+    border-radius: 10px;
+    background: rgba(15, 23, 42, 0.6);
+}
+
+.status-chip {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.chip-label {
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.chip-value {
+    font-weight: 700;
+    font-family: monospace;
+    font-size: 0.95rem;
+}
+
+.start-chip .chip-value {
+    color: var(--node-start);
+}
+
+.end-chip .chip-value {
+    color: var(--node-end);
+}
+
+.mode-chip .chip-value {
+    color: var(--accent-cyan);
+}
+
+.status-arrow {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+/* No Path Banner */
+.banner-warning {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1.25rem;
+    background: rgba(255, 179, 0, 0.15);
+    border: 1px solid rgba(255, 179, 0, 0.4);
+    color: #ffb300;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 4px 15px rgba(255, 179, 0, 0.15);
+    animation: fadeIn 0.3s ease-out;
+}
+
+.banner-icon {
+    font-size: 1.1rem;
+}
+
+.banner-text {
+    flex: 1;
+}
+
+.banner-close {
+    background: none;
+    border: none;
+    color: #ffb300;
+    font-size: 1.4rem;
+    cursor: pointer;
+    padding: 0 0.25rem;
+    line-height: 1;
+}
+
+/* Disabled state for run button */
+.glass-btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed !important;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
