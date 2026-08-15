@@ -213,6 +213,7 @@ void Server::start() {
             resJson["stats"] = {
                 {"nodesVisited", result.stats.nodesVisited},
                 {"pathLength", result.pathFound ? result.stats.pathLength : 0},
+                {"pathCost", result.pathFound ? result.stats.pathCost : 0.0},
                 {"executionTimeMs", result.stats.timeMs}
             };
 

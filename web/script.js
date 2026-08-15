@@ -195,6 +195,18 @@ function setupEventListeners() {
         document.getElementById('compare-modal').classList.add('hidden');
     });
 
+    ['start-row', 'start-col', 'end-row', 'end-col'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    applyManualCoordinates();
+                }
+            });
+        }
+    });
+
     // Placement mode toggle buttons
     document.querySelectorAll('.mode-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
@@ -487,7 +499,9 @@ async function generateMaze(algorithm) {
         if (data.grid) {
             for (let r = 0; r < ROWS; r++) {
                 for (let c = 0; c < COLS; c++) {
-                    if (data.grid[r][c].isWall) {
+                    if ((r === startNode.row && c === startNode.col) || (r === endNode.row && c === endNode.col)) {
+                        grid[r][c].isWall = false;
+                    } else if (data.grid[r][c].isWall) {
                         grid[r][c].isWall = true;
                         grid[r][c].element.classList.add('wall');
                     }
