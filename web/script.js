@@ -1,5 +1,5 @@
 // =============================================================================
-// script.js — Interactive Grid & Web UI Logic
+// script.js — Interactive Grid & Web UI Logic (PathFinder Pro)
 // =============================================================================
 
 const ROWS = 20;
@@ -13,6 +13,7 @@ let isMouseDown = false;
 let isAnimating = false;
 let isDraggingStart = false;
 let isDraggingEnd = false;
+let activeTimeouts = [];
 
 document.addEventListener('DOMContentLoaded', () => {
     initGrid();
@@ -20,12 +21,21 @@ document.addEventListener('DOMContentLoaded', () => {
     setupKeyboardShortcuts();
     updateStatusBar();
     validateRunState();
+
+    document.addEventListener('mouseup', () => {
+        isMouseDown = false;
+        isDraggingStart = false;
+        isDraggingEnd = false;
+    });
 });
 
 function initGrid() {
     const container = document.getElementById('grid-container');
     container.style.gridTemplateColumns = `repeat(${COLS}, 22px)`;
     container.innerHTML = '';
+
+    // Prevent context menu on grid for right-click erase shortcut
+    container.addEventListener('contextmenu', (e) => e.preventDefault());
 
     grid = [];
     for (let r = 0; r < ROWS; r++) {
@@ -50,17 +60,18 @@ function initGrid() {
         }
         grid.push(row);
     }
-
-    document.addEventListener('mouseup', () => {
-        isMouseDown = false;
-        isDraggingStart = false;
-        isDraggingEnd = false;
-    });
 }
 
 function handleCellMouseDown(e, r, c) {
     if (isAnimating) return;
+    e.preventDefault(); // Prevent browser drag & drop / text selection glitch
     isMouseDown = true;
+
+    // Right-click shortcut: Erase cell
+    if (e.button === 2) {
+        eraseCell(r, c);
+        return;
+    }
 
     if (r === startNode.row && c === startNode.col) {
         isDraggingStart = true;
@@ -107,6 +118,14 @@ function setPlacementMode(mode) {
     }
 }
 
+function eraseCell(r, c) {
+    if ((r === startNode.row && c === startNode.col) || (r === endNode.row && c === endNode.col)) return;
+    const cell = grid[r][c];
+    cell.isWall = false;
+    cell.weight = 1;
+    cell.element.className = 'cell';
+}
+
 function applyBrush(r, c) {
     if ((r === startNode.row && c === startNode.col) || (r === endNode.row && c === endNode.col)) return;
 
@@ -142,12 +161,10 @@ function setStartNode(r, c) {
     }
 
     startNode = { row: r, col: c };
-    // Auto-clear wall if setting start on top of a wall
     grid[r][c].isWall = false;
     grid[r][c].weight = 1;
     grid[r][c].element.className = 'cell start';
 
-    // Update coordinate input fields
     document.getElementById('start-row').value = r;
     document.getElementById('start-col').value = c;
 
@@ -165,12 +182,10 @@ function setEndNode(r, c) {
     }
 
     endNode = { row: r, col: c };
-    // Auto-clear wall if setting end on top of a wall
     grid[r][c].isWall = false;
     grid[r][c].weight = 1;
     grid[r][c].element.className = 'cell end';
 
-    // Update coordinate input fields
     document.getElementById('end-row').value = r;
     document.getElementById('end-col').value = c;
 
@@ -191,8 +206,16 @@ function setupEventListeners() {
 
     document.getElementById('btn-dismiss-banner').addEventListener('click', hideNoPathBanner);
 
+    const compareModal = document.getElementById('compare-modal');
     document.getElementById('btn-close-modal').addEventListener('click', () => {
-        document.getElementById('compare-modal').classList.add('hidden');
+        compareModal.classList.add('hidden');
+    });
+
+    // Backdrop click-to-close
+    compareModal.addEventListener('click', (e) => {
+        if (e.target === compareModal) {
+            compareModal.classList.add('hidden');
+        }
     });
 
     ['start-row', 'start-col', 'end-row', 'end-col'].forEach(id => {
@@ -232,6 +255,7 @@ function setupKeyboardShortcuts() {
         } else if (e.key === 'Escape') {
             clearPath();
             hideNoPathBanner();
+            document.getElementById('compare-modal').classList.add('hidden');
         }
     });
 }
@@ -246,21 +270,18 @@ function applyManualCoordinates() {
 
     let hasError = false;
 
-    // Validate Start bounds
     if (isNaN(startRowVal) || startRowVal < 0 || startRowVal >= ROWS ||
         isNaN(startColVal) || startColVal < 0 || startColVal >= COLS) {
         showInlineError('start-coord-error', `Start bounds: Row (0–${ROWS - 1}), Col (0–${COLS - 1})`);
         hasError = true;
     }
 
-    // Validate End bounds
     if (isNaN(endRowVal) || endRowVal < 0 || endRowVal >= ROWS ||
         isNaN(endColVal) || endColVal < 0 || endColVal >= COLS) {
         showInlineError('end-coord-error', `End bounds: Row (0–${ROWS - 1}), Col (0–${COLS - 1})`);
         hasError = true;
     }
 
-    // Validate Start != End
     if (!hasError && startRowVal === endRowVal && startColVal === endColVal) {
         showInlineError('start-coord-error', 'Start and End coordinates cannot be identical');
         showInlineError('end-coord-error', 'Start and End coordinates cannot be identical');
@@ -344,8 +365,16 @@ function hideNoPathBanner() {
     if (banner) banner.classList.add('hidden');
 }
 
+function clearAnimationTimeouts() {
+    for (const t of activeTimeouts) {
+        clearTimeout(t);
+    }
+    activeTimeouts = [];
+    isAnimating = false;
+}
+
 function clearPath() {
-    if (isAnimating) return;
+    clearAnimationTimeouts();
     hideNoPathBanner();
     for (let r = 0; r < ROWS; r++) {
         for (let c = 0; c < COLS; c++) {
@@ -356,7 +385,7 @@ function clearPath() {
 }
 
 function clearBoard() {
-    if (isAnimating) return;
+    clearAnimationTimeouts();
     hideNoPathBanner();
     for (let r = 0; r < ROWS; r++) {
         for (let c = 0; c < COLS; c++) {
@@ -382,6 +411,18 @@ function getWallsArray() {
     return walls;
 }
 
+function getWeightsArray() {
+    const weights = [];
+    for (let r = 0; r < ROWS; r++) {
+        for (let c = 0; c < COLS; c++) {
+            if (!grid[r][c].isWall && grid[r][c].weight > 1) {
+                weights.push({ row: r, col: c, weight: grid[r][c].weight });
+            }
+        }
+    }
+    return weights;
+}
+
 async function runAlgorithm() {
     if (isAnimating) return;
     clearPath();
@@ -393,7 +434,8 @@ async function runAlgorithm() {
         grid: {
             width: COLS,
             height: ROWS,
-            walls: getWallsArray()
+            walls: getWallsArray(),
+            weights: getWeightsArray()
         },
         mode: mode,
         start: [startNode.row, startNode.col],
@@ -427,13 +469,14 @@ async function runAlgorithm() {
 }
 
 function animateResult(data) {
+    clearAnimationTimeouts();
     isAnimating = true;
     const visited = data.visitedOrder || [];
     const path = data.path || [];
 
     let delay = 0;
     visited.forEach((step, idx) => {
-        setTimeout(() => {
+        const t = setTimeout(() => {
             const r = Array.isArray(step) ? step[0] : step.row;
             const c = Array.isArray(step) ? step[1] : step.col;
             if ((r !== startNode.row || c !== startNode.col) &&
@@ -444,6 +487,7 @@ function animateResult(data) {
                 animatePath(path, data.stats);
             }
         }, delay);
+        activeTimeouts.push(t);
         delay += 10;
     });
 
@@ -455,7 +499,7 @@ function animateResult(data) {
 function animatePath(path, stats) {
     let delay = 0;
     path.forEach((step, idx) => {
-        setTimeout(() => {
+        const t = setTimeout(() => {
             const r = Array.isArray(step) ? step[0] : step.row;
             const c = Array.isArray(step) ? step[1] : step.col;
             if ((r !== startNode.row || c !== startNode.col) &&
@@ -467,6 +511,7 @@ function animatePath(path, stats) {
                 updateStats(stats);
             }
         }, delay);
+        activeTimeouts.push(t);
         delay += 30;
     });
 
@@ -516,10 +561,22 @@ async function generateMaze(algorithm) {
 async function runCompareAll() {
     if (isAnimating) return;
 
-    const algos = ['dijkstra', 'astar-manhattan', 'astar-euclidean', 'bfs', 'bellman-ford'];
+    const algos = [
+        'astar-manhattan',
+        'astar-euclidean',
+        'dijkstra',
+        'bidirectional-astar',
+        'bidirectional-dijkstra',
+        'bidirectional-bfs',
+        'greedy-best-first',
+        'bfs',
+        'dfs',
+        'iddfs',
+        'bellman-ford'
+    ];
     const mode = document.getElementById('connectivity-select').value;
     const tableBody = document.getElementById('compare-table-body');
-    tableBody.innerHTML = '<tr><td colspan="5">Running benchmark tests...</td></tr>';
+    tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:1.5rem; color:var(--accent-cyan);">Running benchmark tests...</td></tr>';
     document.getElementById('compare-modal').classList.remove('hidden');
 
     const results = [];
@@ -529,7 +586,8 @@ async function runCompareAll() {
             grid: {
                 width: COLS,
                 height: ROWS,
-                walls: getWallsArray()
+                walls: getWallsArray(),
+                weights: getWeightsArray()
             },
             mode: mode,
             start: [startNode.row, startNode.col],
@@ -569,4 +627,3 @@ async function runCompareAll() {
         tableBody.appendChild(row);
     });
 }
-

@@ -1,7 +1,3 @@
-// =============================================================================
-// main.cpp — Entry Point for PathFinder Pro
-// =============================================================================
-
 #include <iostream>
 #include <string>
 #include "server/Server.hpp"

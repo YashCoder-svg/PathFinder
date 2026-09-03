@@ -1,7 +1,3 @@
-// =============================================================================
-// BellmanFord.cpp — Bellman-Ford Algorithm Implementation
-// =============================================================================
-
 #include "BellmanFord.hpp"
 #include <chrono>
 #include <vector>
@@ -35,10 +31,12 @@ AlgoResult BellmanFord::run(Graph& graph, NodeId start, NodeId end) {
     Node& src = graph.nodeAt(start);
     src.dist = 0.0;
     src.parent = INVALID_NODE;
+    src.visited = true;
 
     int visitSeq = 0;
+    result.visitedOrder.push_back({src.row, src.col, visitSeq++});
+    result.stats.nodesVisited = 1;
 
-    // Collect all edges once
     struct ExtEdge {
         NodeId u;
         NodeId v;
@@ -53,7 +51,6 @@ AlgoResult BellmanFord::run(Graph& graph, NodeId start, NodeId end) {
         }
     }
 
-    // Relax edges V - 1 times
     for (int i = 0; i < V - 1; ++i) {
         bool updated = false;
         for (const auto& edge : allEdges) {
@@ -73,10 +70,9 @@ AlgoResult BellmanFord::run(Graph& graph, NodeId start, NodeId end) {
                 }
             }
         }
-        if (!updated) break; // Early termination if converged
+        if (!updated) break;
     }
 
-    // Check for negative weight cycles
     bool hasNegativeCycle = false;
     for (const auto& edge : allEdges) {
         const Node& u = graph.nodeAt(edge.u);

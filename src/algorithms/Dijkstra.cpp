@@ -1,16 +1,9 @@
-// =============================================================================
-// Dijkstra.cpp — Dijkstra's algorithm implementation
-// =============================================================================
-
 #include "Dijkstra.hpp"
 #include "utils/BinaryHeap.hpp"
 #include <chrono>
 #include <vector>
-#include <algorithm>  // std::reverse
+#include <algorithm>
 
-// ---------------------------------------------------------------------------
-// Helper: reconstruct path end → start via parent pointers, then reverse.
-// ---------------------------------------------------------------------------
 static std::vector<PathStep> reconstructPath(const Graph& graph, NodeId start, NodeId end) {
     std::vector<PathStep> path;
     NodeId cur = end;
@@ -27,9 +20,6 @@ static std::vector<PathStep> reconstructPath(const Graph& graph, NodeId start, N
     return path;
 }
 
-// =============================================================================
-// Dijkstra::run
-// =============================================================================
 AlgoResult Dijkstra::run(Graph& graph, NodeId start, NodeId end) {
     AlgoResult result;
     result.algorithm = "Dijkstra";
@@ -38,32 +28,8 @@ AlgoResult Dijkstra::run(Graph& graph, NodeId start, NodeId end) {
 
     auto t0 = std::chrono::high_resolution_clock::now();
 
-    // -------------------------------------------------------------------------
-    // ALGORITHM:
-    //   1. Initialise all distances to ∞; set dist[start] = 0.
-    //   2. Push (0, start) onto the min-heap.
-    //   3. While the heap is non-empty:
-    //        a. Pop (d, u) — the node u with the smallest known distance d.
-    //        b. If u is already finalised (visited), skip it.
-    //           NOTE: with our decrease-key heap we never insert duplicates,
-    //           but this guard is kept for safety.
-    //        c. Mark u as finalised.
-    //        d. If u == end, stop.
-    //        e. For each neighbour v with edge weight w:
-    //             If d + w < dist[v]:
-    //               Update dist[v] = d + w, parent[v] = u.
-    //               If v is in the heap → decreaseKey(v, d+w).
-    //               Else              → push(d+w, v).
-    //
-    // CORRECTNESS ARGUMENT (Greedy choice):
-    //   When u is popped it has the globally smallest tentative distance.
-    //   Since all edge weights ≥ 0, no future path can improve on d.
-    //   Therefore d is the true shortest distance — we can finalise u.
-    // -------------------------------------------------------------------------
-
     BinaryHeap<double, NodeId> pq;
 
-    // Initialise start node
     Node& src  = graph.nodeAt(start);
     src.dist   = 0.0;
     src.parent = INVALID_NODE;
@@ -75,18 +41,18 @@ AlgoResult Dijkstra::run(Graph& graph, NodeId start, NodeId end) {
         auto [d, uid] = pq.pop();
 
         Node& u = graph.nodeAt(uid);
-        if (u.visited) continue;   // Already finalised
+        if (u.visited) continue;
         u.visited = true;
 
         result.stats.nodesVisited++;
         result.visitedOrder.push_back({u.row, u.col, visitSeq++});
 
-        if (uid == end) break;    // Optimal path found
+        if (uid == end) break;
 
         for (const Edge& e : graph.neighbors(uid)) {
             NodeId vid  = e.to;
             Node&  v    = graph.nodeAt(vid);
-            if (v.visited) continue;   // Finalised — can't improve
+            if (v.visited) continue;
 
             double newDist = d + e.weight;
             if (newDist < v.dist) {

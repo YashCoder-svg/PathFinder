@@ -30,10 +30,16 @@
                 <div class="control-group">
                     <label for="algorithm-select">Algorithm</label>
                     <select id="algorithm-select" class="glass-input">
+                        <option value="astar-manhattan" selected>A* Search (Manhattan)</option>
+                        <option value="astar-euclidean">A* Search (Euclidean)</option>
                         <option value="dijkstra">Dijkstra's Algorithm</option>
-                        <option value="astar-manhattan">A* (Manhattan)</option>
-                        <option value="astar-euclidean">A* (Euclidean)</option>
+                        <option value="bidirectional-astar">Bidirectional A*</option>
+                        <option value="bidirectional-dijkstra">Bidirectional Dijkstra</option>
+                        <option value="bidirectional-bfs">Bidirectional BFS</option>
+                        <option value="greedy-best-first">Greedy Best-First</option>
                         <option value="bfs">Breadth-First Search (BFS)</option>
+                        <option value="dfs">Depth-First Search (DFS)</option>
+                        <option value="iddfs">Iterative Deepening DFS (IDDFS)</option>
                         <option value="bellman-ford">Bellman-Ford</option>
                     </select>
                 </div>

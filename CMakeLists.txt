@@ -18,6 +18,12 @@ add_executable(pathfinder
     src/algorithms/Dijkstra.cpp
     src/algorithms/AStar.cpp
     src/algorithms/BellmanFord.cpp
+    src/algorithms/BidirectionalBFS.cpp
+    src/algorithms/BidirectionalDijkstra.cpp
+    src/algorithms/BidirectionalAStar.cpp
+    src/algorithms/GreedyBestFirst.cpp
+    src/algorithms/DFS.cpp
+    src/algorithms/IDDFS.cpp
     src/algorithms/Maze.cpp
     src/server/Server.cpp
 )

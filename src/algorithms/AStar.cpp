@@ -1,7 +1,3 @@
-// =============================================================================
-// AStar.cpp — A* Search Algorithm Implementation
-// =============================================================================
-
 #include "AStar.hpp"
 #include "utils/BinaryHeap.hpp"
 #include <chrono>
@@ -45,7 +41,7 @@ AlgoResult AStar::run(Graph& graph, NodeId start, NodeId end, HeuristicType heur
     BinaryHeap<double, NodeId> pq;
 
     Node& src = graph.nodeAt(start);
-    src.dist = 0.0; // g(n) = 0
+    src.dist = 0.0;
     src.parent = INVALID_NODE;
 
     double initialF = calculateHeuristic(src, targetNode, heuristic);

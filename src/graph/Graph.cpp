@@ -1,45 +1,32 @@
-// =============================================================================
-// Graph.cpp — Implementation of the grid-based adjacency-list graph
-// =============================================================================
-
 #include "Graph.hpp"
 #include <stdexcept>
 #include <string>
-#include <cmath>  // std::sqrt
+#include <cmath>
 
-// ---------------------------------------------------------------------------
-// Direction tables
-// ---------------------------------------------------------------------------
-// 4-way: North (row-1), South (row+1), West (col-1), East (col+1)
 const int Graph::kDir4[4][2] = {
-    {-1,  0},  // North
-    { 1,  0},  // South
-    { 0, -1},  // West
-    { 0,  1},  // East
+    {-1,  0},
+    { 1,  0},
+    { 0, -1},
+    { 0,  1},
 };
 
-// 8-way: 4-way + 4 diagonals
 const int Graph::kDir8[8][2] = {
-    {-1,  0},  // North
-    { 1,  0},  // South
-    { 0, -1},  // West
-    { 0,  1},  // East
-    {-1, -1},  // North-West
-    {-1,  1},  // North-East
-    { 1, -1},  // South-West
-    { 1,  1},  // South-East
+    {-1,  0},
+    { 1,  0},
+    { 0, -1},
+    { 0,  1},
+    {-1, -1},
+    {-1,  1},
+    { 1, -1},
+    { 1,  1},
 };
 
-// =============================================================================
-// Constructor
-// =============================================================================
 Graph::Graph(int rows, int cols, ConnectivityMode mode)
     : rows_(rows), cols_(cols), mode_(mode)
 {
     if (rows <= 0 || cols <= 0)
         throw std::invalid_argument("Graph: rows and cols must be positive");
 
-    // Initialise the flat node array
     nodes_.resize(rows * cols);
     for (int r = 0; r < rows; ++r) {
         for (int c = 0; c < cols; ++c) {
@@ -49,14 +36,10 @@ Graph::Graph(int rows, int cols, ConnectivityMode mode)
         }
     }
 
-    // Allocate adjacency list slots (filled by buildAdjacencyList)
     edges_.resize(rows * cols);
     buildAdjacencyList();
 }
 
-// =============================================================================
-// Bounds checking helper
-// =============================================================================
 void Graph::assertBounds(int row, int col) const {
     if (row < 0 || row >= rows_ || col < 0 || col >= cols_) {
         throw std::out_of_range(
@@ -67,9 +50,6 @@ void Graph::assertBounds(int row, int col) const {
     }
 }
 
-// =============================================================================
-// Accessors
-// =============================================================================
 NodeId Graph::idOf(int row, int col) const {
     assertBounds(row, col);
     return row * cols_ + col;
@@ -93,23 +73,11 @@ const std::vector<Edge>& Graph::neighbors(NodeId id) const {
     return edges_.at(static_cast<std::size_t>(id));
 }
 
-// =============================================================================
-// buildEdgesFor — compute outgoing edges for a single node
-// =============================================================================
-// DESIGN NOTE: We store edges only for non-wall nodes and only to non-wall
-// neighbours.  This keeps the adjacency list lean and means wall checks don't
-// need to happen inside the algorithm hot-loops — they're already filtered here.
-//
-// Edge weight = destination node's terrain weight.
-//   • For cardinal (N/S/E/W) edges   → weight = dest.weight
-//   • For diagonal edges             → weight = dest.weight * √2
-//     (a diagonal step covers √2 cells in Euclidean space)
-// =============================================================================
 void Graph::buildEdgesFor(NodeId id) {
     edges_[id].clear();
 
     const Node& src = nodes_[id];
-    if (src.isWall) return;  // Wall nodes have no outgoing edges
+    if (src.isWall) return;
 
     const int (*dirs)[2]  = (mode_ == ConnectivityMode::FourWay) ? kDir4 : kDir8;
     int numDirs            = (mode_ == ConnectivityMode::FourWay) ? 4     : 8;
@@ -118,14 +86,17 @@ void Graph::buildEdgesFor(NodeId id) {
         int nr = src.row + dirs[d][0];
         int nc = src.col + dirs[d][1];
 
-        // Skip out-of-bounds
         if (nr < 0 || nr >= rows_ || nc < 0 || nc >= cols_) continue;
 
         const Node& dst = nodes_[nr * cols_ + nc];
-        if (dst.isWall) continue;  // Skip impassable neighbours
+        if (dst.isWall) continue;
 
-        // Diagonal edges cost √2 times the destination weight
         bool isDiagonal = (dirs[d][0] != 0 && dirs[d][1] != 0);
+        if (isDiagonal) {
+            if (nodes_[nr * cols_ + src.col].isWall && nodes_[src.row * cols_ + nc].isWall) {
+                continue;
+            }
+        }
         double edgeWeight = isDiagonal
             ? static_cast<double>(dst.weight) * std::sqrt(2.0)
             : static_cast<double>(dst.weight);
@@ -134,31 +105,19 @@ void Graph::buildEdgesFor(NodeId id) {
     }
 }
 
-// =============================================================================
-// buildAdjacencyList — rebuild all edges
-// =============================================================================
-// Called after any bulk topology change (loading a new grid, toggling many
-// walls).  For a V-node, E-edge graph this is O(V + E) — acceptable since
-// the grid is typically small (≤ 200×200 = 40 000 nodes).
 void Graph::buildAdjacencyList() {
     for (NodeId id = 0; id < static_cast<NodeId>(nodes_.size()); ++id) {
         buildEdgesFor(id);
     }
 }
 
-// =============================================================================
-// setWall — toggle a single cell and rebuild its and its neighbours' edges
-// =============================================================================
 void Graph::setWall(int row, int col, bool wall) {
     assertBounds(row, col);
     NodeId id        = idOf(row, col);
     nodes_[id].isWall = wall;
 
-    // Rebuild this cell's edges
     buildEdgesFor(id);
 
-    // Also rebuild the edges of all neighbours, because a wall change here
-    // may add or remove edges pointing *to* this cell.
     const int (*dirs)[2] = (mode_ == ConnectivityMode::FourWay) ? kDir4 : kDir8;
     int numDirs           = (mode_ == ConnectivityMode::FourWay) ? 4     : 8;
 
@@ -170,15 +129,11 @@ void Graph::setWall(int row, int col, bool wall) {
     }
 }
 
-// =============================================================================
-// setWeight / setStart / setEnd
-// =============================================================================
-void Graph::setWeight(int row, int col, int weight) {
+void Graph::setWeight(int row, int col, double weight) {
     assertBounds(row, col);
     nodes_[idOf(row, col)].weight = weight;
-    // Rebuilding edges of neighbours is necessary because edge weights
-    // depend on the *destination* node's weight.
-    setWall(row, col, nodes_[idOf(row, col)].isWall); // reuse neighbour-rebuild logic
+
+    setWall(row, col, nodes_[idOf(row, col)].isWall);
 }
 
 void Graph::setStart(int row, int col) {
@@ -193,17 +148,10 @@ void Graph::setEnd(int row, int col) {
     nodes_[endId_].isEnd = true;
 }
 
-// =============================================================================
-// resetState — clear per-run algorithm data
-// =============================================================================
-// Always call this before starting a new search on the same Graph object.
 void Graph::resetState() {
     for (Node& n : nodes_) n.resetState();
 }
 
-// =============================================================================
-// loadFromGrid — batch-load cell descriptors
-// =============================================================================
 void Graph::loadFromGrid(const std::vector<std::vector<CellDesc>>& cells) {
     if (static_cast<int>(cells.size()) != rows_)
         throw std::invalid_argument("loadFromGrid: row count mismatch");
