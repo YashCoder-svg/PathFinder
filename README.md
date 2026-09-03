@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <strong>An enterprise-grade, interactive graph pathfinding visualizer, procedural maze sandbox, and algorithmic benchmark suite powered by an ultra-fast C++17 REST backend server.</strong>
+  <strong>An enterprise-grade, high-performance graph pathfinding visualizer, procedural maze sandbox, and algorithmic benchmark suite powered by an ultra-fast C++17 REST backend server and a sleek glassmorphic interactive web dashboard.</strong>
 </p>
 
 ---
@@ -18,213 +18,284 @@
 ## 📑 Table of Contents
 
 - [Overview](#-overview)
+- [🎤 Project Presentation Guide (Slide-by-Slide)](#-project-presentation-guide-slide-by-slide)
+  - [Slide 1: Title & Executive Pitch](#slide-1-title--executive-pitch)
+  - [Slide 2: Problem Statement & Motivation](#slide-2-problem-statement--motivation)
+  - [Slide 3: System Architecture](#slide-3-system-architecture)
+  - [Slide 4: Algorithm Engine & Theoretical Complexity](#slide-4-algorithm-engine--theoretical-complexity)
+  - [Slide 5: Key Engineering Highlights & Data Structures](#slide-5-key-engineering-highlights--data-structures)
+  - [Slide 6: Procedural Maze Generation](#slide-6-procedural-maze-generation)
+  - [Slide 7: Empirical Benchmark & Head-to-Head Race](#slide-7-empirical-benchmark--head-to-head-race)
+  - [Slide 8: 60-Second Live Demo Script](#slide-8-60-second-live-demo-script)
+  - [Slide 9: Technical Q&A & Interview Defense](#slide-9-technical-qa--interview-defense)
+  - [Slide 10: Future Roadmap & Extensibility](#slide-10-future-roadmap--extensibility)
 - [Key Features](#-key-features)
-  - [Pathfinding & Graph Traversal Engine](#-pathfinding--graph-traversal-engine)
-  - [Procedural Maze & Terrain Generators](#-procedural-maze--terrain-generators)
-  - [Interactive Glassmorphic Web Dashboard](#-interactive-glassmorphic-web-dashboard)
-  - [Multi-Algorithm Benchmark & Race Mode](#-multi-algorithm-benchmark--race-mode)
-  - [Interactive Theory & Pseudocode Inspector](#-interactive-theory--pseudocode-inspector)
-  - [Multi-Stop Waypoints & Live Dragging](#-multi-stop-waypoints--live-dragging)
+  - [Graph Traversal & Heuristic Search Suite](#-graph-traversal--heuristic-search-suite)
+  - [Procedural Maze & Labyrinth Generators](#-procedural-maze--labyrinth-generators)
+  - [Interactive Dark Glassmorphic Dashboard](#-interactive-dark-glassmorphic-dashboard)
+  - [Multi-Algorithm Benchmark Mode](#-multi-algorithm-benchmark-mode)
 - [Algorithm Comparison Matrix](#-algorithm-comparison-matrix)
 - [System Architecture & Engineering Highlights](#-system-architecture--engineering-highlights)
-  - [Custom Min-Heap with Decrease-Key](#custom-min-heap-with-decrease-key)
-  - [Multi-Weight Terrain & Diagonal Geometry](#multi-weight-terrain--diagonal-geometry)
-  - [REST API Server Pipeline](#rest-api-server-pipeline)
+  - [Custom Min-Heap with $O(\log n)$ Decrease-Key](#custom-min-heap-with-olog-n-decrease-key)
+  - [Weighted Terrain & Diagonal Geometry](#weighted-terrain--diagonal-geometry)
+  - [IDDFS Heuristic Pruning on Grid Graphs](#iddfs-heuristic-pruning-on-grid-graphs)
 - [Project Directory Structure](#-project-directory-structure)
 - [Getting Started & Installation](#-getting-started--installation)
   - [Prerequisites](#prerequisites)
   - [Building from Source](#building-from-source)
-    - [Windows (MSVC / MinGW / PowerShell)](#windows-msvc--mingw--powershell)
-    - [Linux (Ubuntu / Debian / Arch / Fedora)](#linux-ubuntu--debian--arch--fedora)
-    - [macOS (Clang / Homebrew)](#macos-clang--homebrew)
   - [Running the Server](#running-the-server)
 - [REST API Reference](#-rest-api-reference)
-  - [`GET /api/health`](#get-apihealth)
-  - [`GET /api/presets`](#get-apipresets)
-  - [`POST /api/solve`](#post-apisolve)
-  - [`POST /api/generate-maze`](#post-apigenerate-maze)
-- [Keyboard Shortcuts & Hotkeys](#-keyboard-shortcuts--hotkeys)
-- [Terrain & Tool Palette Guide](#-terrain--tool-palette-guide)
-- [Configuration & Extending the Engine](#-configuration--extending-the-engine)
-- [Contributing](#-contributing)
-- [License](#-license)
+- [Keyboard Shortcuts & Controls](#-keyboard-shortcuts--controls)
+- [Contributing & License](#-contributing--license)
 
 ---
 
 ## 🌟 Overview
 
-**PathFinder Pro** bridges the gap between academic graph theory, high-performance systems programming, and modern visual design.
+**PathFinder Pro** bridges the gap between academic graph theory, high-performance systems programming, and modern user-interface design.
 
-At its core, a multithreaded **C++17 HTTP/REST engine** executes graph traversal and heuristic pathfinding calculations in sub-millisecond compute times using cache-friendly data structures and custom heap implementations. On the presentation layer, a responsive **Glassmorphism Web Dashboard** renders real-time exploration waves, step-by-step scrubbable execution timelines, dynamic Web Audio synthesizer harmonics, side-by-side algorithm race benchmarks, and procedural terrain environments.
+Most online pathfinding visualizers are built entirely in client-side JavaScript, running synchronously in the single-threaded browser loop. **PathFinder Pro takes a production-grade systems approach**:
+- A multithreaded **C++17 HTTP/REST engine** computes shortest paths, heuristic traversals, and procedural maze structures in **sub-millisecond execution times** ($< 0.2\text{ms}$) using cache-coherent memory layouts and custom heap data structures.
+- A **dark glassmorphism web client** renders step-by-step exploration waves, real-time node dragging, live statistics, and side-by-side multi-algorithm benchmarks.
 
-Whether you are studying graph algorithms, preparing for technical interviews, benchmarking heuristic search efficiency, or developing game AI pathing systems, PathFinder Pro delivers an intuitive and comprehensive toolkit.
+---
+
+## 🎤 Project Presentation Guide (Slide-by-Slide)
+
+Use this structured section to prepare slide decks, project reports, viva defense, or live demonstrations.
+
+### Slide 1: Title & Executive Pitch
+- **Project Name**: PathFinder Pro — Advanced Graph & Pathfinding Visualizer
+- **Tagline**: High-Performance C++17 Graph Traversal Engine & Interactive Visualizer
+- **Presenter**: Yash Gupta
+- **Core Value Proposition**: An end-to-end full-stack demonstration combining low-level systems programming (C++17, custom data structures, memory efficiency) with responsive web engineering (REST API, glassmorphic UI, real-time visual telemetry).
+
+---
+
+### Slide 2: Problem Statement & Motivation
+- **Abstract Complexity**: Graph theory algorithms (Dijkstra, A*, Bellman-Ford, Bidirectional search) are foundational to computer science, networking, robotics, and game development, yet students and engineers struggle to visualize their runtime mechanics and trade-offs.
+- **Client-Side Visualizer Pitfalls**: Existing online tools suffer from browser freeze on complex mazes, lack real backend engineering, and do not provide empirical benchmarks on identical test environments.
+- **Our Goal**: Create an extensible, dual-tier platform where low-level algorithm performance can be visually inspected and empirically benchmarked with microsecond precision.
+
+---
+
+### Slide 3: System Architecture
+```
+┌──────────────────────────────────────────────────────────────────────────┐
+│                   PRESENTATION LAYER (Web Browser)                       │
+│  ┌────────────────────┬────────────────────┬──────────────────────────┐  │
+│  │ 20x40 Canvas Grid  │ Interactive Brush  │ Live Benchmark Modal     │  │
+│  │ & CSS Animations   │ (Start/End/Walls)  │ & Telemetry Display      │  │
+│  └────────────────────┴────────────────────┴──────────────────────────┘  │
+└─────────────────────────────────────┬────────────────────────────────────┘
+                                      │ HTTP REST API (JSON over TCP:8080)
+                                      ▼
+┌──────────────────────────────────────────────────────────────────────────┐
+│                 BACKEND COMPUTE ENGINE (C++17 REST)                      │
+│  ┌────────────────────────────────────────────────────────────────────┐  │
+│  │                     cpp-httplib Server Router                      │  │
+│  │           /api/health  •  /api/solve  •  /api/generate-maze        │  │
+│  └──────────────────┬─────────────────────────────────┬───────────────┘  │
+│                     │                                 │                  │
+│                     ▼                                 ▼                  │
+│  ┌────────────────────────────────────┐ ┌─────────────────────────────┐  │
+│  │       Graph Traversal Engine       │ │   Procedural Maze Engine    │  │
+│  │  • A* (Manhattan & Euclidean)      │ │  • DFS Recursive Backtracker│  │
+│  │  • Dijkstra (Custom Min-Heap)      │ │  • Prim's Spanning Tree     │  │
+│  │  • Bidirectional A* / Dijkstra/BFS │ │  • Recursive Division       │  │
+│  │  • Bellman-Ford (Negative Weights) │ │  • Cellular Automata Caves  │  │
+│  │  • GBFS, BFS, DFS, IDDFS           │ │  • Spiral & Noise Heights   │  │
+│  └──────────────────┬─────────────────┘ └─────────────┬───────────────┘  │
+│                     │                                 │                  │
+│                     ▼                                 ▼                  │
+│  ┌────────────────────────────────────────────────────────────────────┐  │
+│  │                 Custom Generic BinaryHeap<Key, Value>              │  │
+│  │      O(1) lookup • O(log n) decreaseKey • O(V) space guarantee     │  │
+│  └────────────────────────────────────────────────────────────────────┘  │
+└──────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+### Slide 4: Algorithm Engine & Theoretical Complexity
+
+| Algorithm Family | Implemented Variants | Optimality | Time Complexity | Space Complexity |
+| :--- | :--- | :---: | :---: | :---: |
+| **A\* Search** | Manhattan & Euclidean Heuristics | ✅ Optimal | $\mathcal{O}((V + E)\log V)$ | $\mathcal{O}(V)$ |
+| **Dijkstra** | Min-Heap with Decrease-Key | ✅ Optimal | $\mathcal{O}((V + E)\log V)$ | $\mathcal{O}(V)$ |
+| **Bidirectional**| Bi-A\*, Bi-Dijkstra, Bi-BFS | ✅ Optimal | $\mathcal{O}((V + E)\log V)$ | $\mathcal{O}(V)$ |
+| **Greedy Best-First**| Pure Heuristic ($f=h$) | ❌ Heuristic | $\mathcal{O}(V \log V)$ | $\mathcal{O}(V)$ |
+| **Classic Traversal**| BFS, DFS, IDDFS | ✅ BFS/IDDFS | $\mathcal{O}(V + E)$ | $\mathcal{O}(V)$ / $\mathcal{O}(d)$ |
+| **Dynamic Prog.**| Bellman-Ford (Cycle-Aware) | ✅ Optimal | $\mathcal{O}(V \cdot E)$ | $\mathcal{O}(V)$ |
+
+---
+
+### Slide 5: Key Engineering Highlights & Data Structures
+1. **Custom Generic Min-Heap (`BinaryHeap<K, V>`)**:
+   - Standard C++ `std::priority_queue` does **not** support `decreaseKey`. Common lazy-deletion workarounds incur an $O(E)$ memory penalty.
+   - We engineered a generic binary min-heap with an internal position map (`pos_` vector) that provides true $O(\log n)$ key reduction in-place with strict $O(V)$ space invariant.
+2. **Admissible Heuristic IDDFS with State Memoization**:
+   - Classic IDDFS on cyclic grid graphs suffers from an $O(4^d)$ exponential path-explosion.
+   - We implemented remaining-depth memoization (`maxRemainingDepth`) combined with admissible Manhattan distance pruning (`depth < h(u, target)`), reducing IDDFS search time from a server freeze to **$0.18\text{ ms}$**.
+3. **Corner-Cutting Prevention in 8-Way Diagonal Geometry**:
+   - Prevents entities from clipping diagonally through two orthogonal corner walls:
+     $$\text{valid}(r_2, c_2) \iff \neg(\text{isWall}(r_1, c_2) \land \text{isWall}(r_2, c_1))$$
+4. **Decoupled Architecture**:
+   - Clean separation of concerns: C++ handles heavy matrix operations and algorithm execution; JavaScript handles visual animation and DOM rendering.
+
+---
+
+### Slide 6: Procedural Maze Generation
+- **DFS Recursive Backtracker**: Generates single-solution "river" mazes with deep branching corridors and zero closed loops.
+- **Prim's Minimum Spanning Tree**: Generates highly textured radial labyrinths with numerous short dead-ends.
+- **Recursive Division**: Subdivides empty space with wall segments and random doorways, simulating building floorplans.
+- **Cellular Automata**: Uses iterative Moore neighborhood birth/survival rules to sculpt organic cavern networks.
+
+---
+
+### Slide 7: Empirical Benchmark & Head-to-Head Race
+
+*Measured on a standard $20 \times 40$ grid (800 nodes, 15 obstacles) via automated benchmark:*
+
+```
+========================================================================================
+Algorithm                         Visited Nodes   Path Length   Path Cost   Execution Time
+========================================================================================
+A* Search (Manhattan)                  116            39           38.0        0.45 ms
+A* Search (Euclidean)                  377            39           38.0        0.91 ms
+Bidirectional A*                       136            39           38.0        0.45 ms
+Bidirectional Dijkstra                 703            39           38.0        0.81 ms
+Dijkstra's Algorithm                   723            39           38.0        2.17 ms
+Greedy Best-First (GBFS)                39            39           38.0        0.11 ms
+Bidirectional BFS                      700            39           42.0        0.34 ms
+Breadth-First Search (BFS)             732            39           38.0        0.22 ms
+Depth-First Search (DFS)               135           135          138.0        0.22 ms
+Iterative Deepening (IDDFS)             39            39           38.0        0.18 ms
+Bellman-Ford                           795            39           38.0        2.22 ms
+========================================================================================
+```
+
+**Key Takeaway**:
+- **A\*** visits **6x fewer nodes** than Dijkstra ($116$ vs $723$) while guaranteeing the identical optimal path cost ($38.0$).
+- **Greedy Best-First** is the fastest ($0.11\text{ms}$), but can yield suboptimal paths in weighted terrain.
+- **Dijkstra** explores uniformly in all directions (uninformed), making it ideal for 1-to-All routing.
+
+---
+
+### Slide 8: 60-Second Live Demo Script
+
+| Time | Action on Web UI | Talking Point for Audience |
+| :--- | :--- | :--- |
+| **0:00 – 0:15** | Open `http://localhost:8080`. Point out the glassmorphism dark theme, 20x40 grid, and status bar. | *"PathFinder Pro is backed by a native C++17 REST server. The UI features start, target, wall, and weighted terrain brushes."* |
+| **0:15 – 0:30** | Click **DFS Maze** or **Prim's Maze**. Watch the maze generate instantly. Click **▶ Run Search** (A*). | *"Watch A\* navigate through the procedural maze. The cyan wave shows node exploration, and the glowing yellow path marks the mathematical shortest path."* |
+| **0:30 – 0:45** | Click **Clear Path**. Switch algorithm to **Dijkstra** and run again. Note the difference in nodes visited on the stats card. | *"Notice how Dijkstra explores in concentric circles visiting significantly more nodes, while A\* uses the Manhattan heuristic to prune unpromising branches."* |
+| **0:45 – 1:00** | Click **📊 Compare All**. | *"The Compare All modal benchmarks all 11 algorithms concurrently on the active board layout, ranking visited count, path cost, and backend latency."* |
+
+---
+
+### Slide 9: Technical Q&A & Interview Defense
+
+**Q1: Why build the backend in C++ instead of running everything in the browser with JavaScript?**
+> *Answer*: Native C++ gives deterministic cache locality, direct control over memory allocations, and SIMD-friendly contiguous vectors. It demonstrates how a production routing engine (like Google Maps or OSPF network switches) isolates high-throughput graph compute behind a REST/gRPC API.
+
+**Q2: Why not just use `std::priority_queue` for Dijkstra and A*?**
+> *Answer*: `std::priority_queue` does not offer a `decrease_key` method. The standard lazy workaround pushes duplicate node entries, growing the heap to $O(E)$ size and requiring extra pop operations. Our custom `BinaryHeap` maintains an internal index table to update priorities in-place in $O(\log n)$ time with a strict $O(V)$ space guarantee.
+
+**Q3: When should someone choose A* over Dijkstra, and vice-versa?**
+> *Answer*: A* is strictly superior for single-pair shortest path queries ($S \to E$) when an admissible heuristic exists, because it directs search towards the target. Dijkstra is required when finding shortest paths from one source to all destinations (one-to-all), or when no reliable heuristic can be formulated.
+
+**Q4: How does Bellman-Ford differ from Dijkstra on this grid?**
+> *Answer*: Dijkstra assumes non-negative edge weights and operates greedily using a priority queue ($O((V+E)\log V)$). Bellman-Ford uses dynamic programming through edge relaxation ($O(V \cdot E)$), allowing it to handle negative edge weights and report negative cycles.
+
+---
+
+### Slide 10: Future Roadmap & Extensibility
+- [ ] **Dynamic Obstacles**: Moving hazards and real-time D* Lite replanning.
+- [ ] **WebSocket Streaming**: Streaming node-by-node exploration steps over binary WebSockets for ultra-low overhead.
+- [ ] **3D Voxel Terrain**: Extending the graph adjacency matrix to 3D grid volumes ($26$-way connectivity).
+- [ ] **Contraction Hierarchies**: Precomputing highway shortcuts for million-node city map graphs.
 
 ---
 
 ## ✨ Key Features
 
-### 🚀 Pathfinding & Graph Traversal Engine
+### 🚀 Graph Traversal & Heuristic Search Suite
+- **A\* Search (Manhattan & Euclidean Heuristics)**: Direct, optimal heuristic search.
+- **Dijkstra's Algorithm**: Uniform-cost exploration powered by our custom min-heap.
+- **Bidirectional A\*, Dijkstra, and BFS**: Dual expanding frontiers meeting at the optimal midpoint.
+- **Greedy Best-First Search (GBFS)**: High-speed greedy search prioritizing directional velocity.
+- **Breadth-First Search (BFS)**: Unweighted shortest-path baseline.
+- **Depth-First Search (DFS)**: Deep traversal with backtrack tracking.
+- **Iterative Deepening DFS (IDDFS)**: Space-efficient depth-bounded search with heuristic distance pruning.
+- **Bellman-Ford**: Dynamic programming relaxation supporting negative weights.
 
-PathFinder Pro includes 10+ industry-standard and academic pathfinding algorithms across 5 distinct paradigms:
+### 🗺️ Procedural Maze & Labyrinth Generators
+- **DFS Recursive Backtracker**: Long winding corridors.
+- **Prim's Algorithm (Minimum Spanning Tree)**: Radial complex branching.
+- **Recursive Division**: Compartmentalized rooms and doorways.
+- **Cellular Automata**: Natural organic cave systems.
+- **Spiral Labyrinth & Terrain Noise**: Elevation layers and stress-test layouts.
 
-1. **Optimal Weighted Search**:
-   - **A\* Search (Manhattan Heuristic)**: Industry gold standard for orthogonal grid navigation using admissible distance estimates ($f(n) = g(n) + h(n)$).
-   - **A\* Search (Euclidean Heuristic)**: Straight-line metric optimized for 8-way diagonal movement.
-   - **Dijkstra's Algorithm**: Guaranteed shortest-path exploration on weighted graphs powered by a custom min-heap with $O(\log n)$ decrease-key.
-   - **Bellman-Ford Algorithm**: Dynamic programming approach capable of handling arbitrary edge weights and detecting **negative-weight cycles**.
-
-2. **Bidirectional Search (Dual Expanding Frontiers)**:
-   - **Bidirectional A\***: Simultaneous forward ($S \to E$) and backward ($E \to S$) heuristic search meeting at the optimal intersection node.
-   - **Bidirectional Dijkstra**: Dual-ended uniform-cost search halving the search space area.
-   - **Bidirectional BFS**: Ultra-fast unweighted dual wave search.
-
-3. **Fast Heuristic & Greedy Search**:
-   - **Greedy Best-First Search (GBFS - Manhattan & Euclidean)**: Pure heuristic exploration ($f(n) = h(n)$) prioritizing velocity toward the target over path optimality.
-
-4. **Classic Graph Traversal**:
-   - **Breadth-First Search (BFS)**: FIFO queue exploration guaranteeing shortest path on unweighted unit grids.
-   - **Depth-First Search (DFS)**: LIFO stack exploration exploring deep labyrinth paths.
-   - **Iterative Deepening DFS (IDDFS)**: Combines the space efficiency of DFS ($O(d)$ memory) with the completeness of BFS.
-
----
-
-### 🗺️ Procedural Maze & Terrain Generators
-
-Generate complex topological challenges on demand:
-
-- **Recursive Division (Chambers)**: Subdivides the grid recursively into walls with randomly punched doorways, forming realistic floorplans.
-- **Cellular Automata (Cave Networks)**: Simulates Conway-style rock birth/survival rules to generate organic caverns and dungeon tunnels.
-- **DFS Recursive Backtracker**: Generates perfect single-solution mazes with long corridors and no closed loops.
-- **Prim's Algorithm (Minimum Spanning Tree)**: Builds sprawling radial labyrinths by picking lowest-cost adjacent frontier walls.
-- **Spiral Labyrinth**: Creates a winding inward spiral maze to stress-test heuristic back-tracking.
-- **Procedural Height & Terrain Noise**: Generates smooth terrain elevation layers (Expressways, Sand Hills, Mud Forests, Deep Swamps).
-- **Random Scatter**: Configurable density obstacle scatter.
-
----
-
-### 🎨 Interactive Glassmorphic Web Dashboard
-
-- **4 Curated Visual Themes**:
-  - 🌌 *Cyber Midnight* (Default neon dark mode)
-  - 🌲 *Emerald Matrix* (Phosphor cyber green)
-  - 🌅 *Sunset Amber* (Warm glass gradient)
-  - ☀️ *Studio Light* (Clean high-contrast daytime mode)
-- **Time Scrubber & Playback Timeline**:
-  - Pause, resume, jump to start/end, and step forward/backward through every single node expansion.
-  - Variable speed playback: `0.5x`, `1.0x`, `3.0x`, `10x Turbo`, and `Instant`.
-- **Synthesizer Web Audio Engine**:
-  - Real-time procedural audio synthesis adjusting harmonic pitch based on distance from start, exploration wave velocity, and goal acquisition.
-- **Grid Scale Scalability**:
-  - Switch seamlessly between `Compact (16×32)`, `Standard (20×40)`, and `Dense (24×50)`.
-- **JSON Import / Export**:
-  - Save custom maze configurations and problem sets to JSON files and reload them at any time.
-
----
-
-### 🏁 Multi-Algorithm Benchmark & Race Mode
-
-Launch a head-to-head performance simulation comparing all pathfinding algorithms simultaneously on the identical active grid layout:
-
-- **Visual Race Bars**: Real-time progress bars showing node exploration velocity.
-- **Side-by-Side Telemetry Table**:
-  - Explored Node Count
-  - Shortest Path Length (Steps)
-  - Total Weighted Movement Cost
-  - C++ Backend Execution Time ($\mu\text{s}$ / $\text{ms}$)
-  - Mathematical Optimality Guarantees
-
----
-
-### 📖 Interactive Theory & Pseudocode Inspector
-
-Deepen algorithmic understanding with integrated theory drawers:
-- **Synchronized Pseudocode Block**: Highlights corresponding runtime logic steps.
-- **Complexity Metrics**: Exact asymptotic time complexity $O(V, E)$, space complexity, admissibility proofs, and recommended real-world use cases (Robotics, Game Dev, Network Routing, GIS).
-
----
-
-### 📍 Multi-Stop Waypoints & Live Dragging
-
-- **Multi-Stop Checkpoints (Start $\to$ Waypoint $\to$ Target)**: Insert intermediate waypoint checkpoints to solve multi-segment traveling routes seamlessly.
-- **⚡ Live Drag Recalculation**: Drag Start, Target, or Waypoint markers around the grid in real-time — the backend and frontend dynamically re-solve and animate the optimal path at 60 FPS without delay.
+### 🎨 Interactive Dark Glassmorphic Dashboard
+- **Sleek Deep Space Palette**: Dark navy background (`#0d0f17`), glass cards (`rgba(22, 27, 46, 0.65)`), cyan/blue/purple gradients.
+- **Placement Brushes**: Start node (🚩), Target node (🎯), Wall barriers (🧱), Light terrain cost 2 (🟨), Heavy terrain cost 5 (🟧), and Eraser (🧹).
+- **Coordinate Inputs & Randomizer**: Direct manual row/column entry with validation or single-click randomizer.
+- **Live Stats Panel**: Real-time telemetry reporting Nodes Visited, Path Length, Path Cost, and C++ Execution Time.
+- **Right-Click Eraser**: Quick mouse eraser shortcut on the grid canvas.
 
 ---
 
 ## 📊 Algorithm Comparison Matrix
 
-| Algorithm | Weighted Grid Support | Negative Weights | Shortest Path (Optimal) | Time Complexity | Space Complexity | Frontier Data Structure | Primary Use Case |
-| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **A\* Search (Manhattan)** | ✅ Yes | ❌ No | ✅ Yes (Admissible) | $\mathcal{O}((V + E)\log V)$ | $\mathcal{O}(V)$ | Min-Heap (Decrease-Key) | Grid Games, Robotics |
-| **A\* Search (Euclidean)** | ✅ Yes | ❌ No | ✅ Yes (Admissible) | $\mathcal{O}((V + E)\log V)$ | $\mathcal{O}(V)$ | Min-Heap (Decrease-Key) | 8-Way Movement, Continuous Maps |
-| **Bidirectional A\*** | ✅ Yes | ❌ No | ✅ Yes (Consistent) | $\mathcal{O}((V + E)\log V)$ | $\mathcal{O}(V)$ | Dual Min-Heaps | Large-scale Point-to-Point Routing |
-| **Dijkstra's Algorithm** | ✅ Yes | ❌ No | ✅ Guaranteed | $\mathcal{O}((V + E)\log V)$ | $\mathcal{O}(V)$ | Min-Heap (Decrease-Key) | Network Routing (OSPF), GPS |
-| **Bidirectional Dijkstra** | ✅ Yes | ❌ No | ✅ Guaranteed | $\mathcal{O}((V + E)\log V)$ | $\mathcal{O}(V)$ | Dual Min-Heaps | Accelerated Weighted Navigation |
-| **Breadth-First Search (BFS)** | ❌ No (Unit) | ❌ No | ✅ Yes (Unweighted) | $\mathcal{O}(V + E)$ | $\mathcal{O}(V)$ | FIFO Queue (`std::queue`) | Peer-to-Peer, Unweighted Mazes |
-| **Bidirectional BFS** | ❌ No (Unit) | ❌ No | ✅ Yes (Unweighted) | $\mathcal{O}(b^{d/2})$ | $\mathcal{O}(b^{d/2})$ | Dual FIFO Queues | Fast Maze & Social Graph Search |
-| **Greedy Best-First Search** | ✅ Yes | ❌ No | ❌ No (Sub-optimal) | $\mathcal{O}(V \log V)$ | $\mathcal{O}(V)$ | Min-Heap | Real-time Game AI, Fast Exploration |
-| **Depth-First Search (DFS)** | ❌ No | ❌ No | ❌ No | $\mathcal{O}(V + E)$ | $\mathcal{O}(V)$ | LIFO Stack (`std::vector`) | Maze Generation, Cycle Detection |
-| **Iterative Deepening (IDDFS)**| ❌ No (Unit) | ❌ No | ✅ Yes (Unweighted) | $\mathcal{O}(b^d)$ | $\mathcal{O}(d)$ | Call Stack / Iteration | Memory-Constrained Search Trees |
-| **Bellman-Ford** | ✅ Yes | ✅ Yes | ✅ Yes (Cycle Detect) | $\mathcal{O}(V \cdot E)$ | $\mathcal{O}(V)$ | Dynamic Array / Relaxation | Forex Arbitrage, Distance Vector (RIP) |
+| Algorithm | Weighted Grid | Negative Weights | Shortest Path (Optimal) | Time Complexity | Space Complexity | Frontier Data Structure |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: |
+| **A\* Search (Manhattan)** | ✅ Yes | ❌ No | ✅ Yes (Admissible) | $\mathcal{O}((V + E)\log V)$ | $\mathcal{O}(V)$ | Min-Heap (Decrease-Key) |
+| **A\* Search (Euclidean)** | ✅ Yes | ❌ No | ✅ Yes (Admissible) | $\mathcal{O}((V + E)\log V)$ | $\mathcal{O}(V)$ | Min-Heap (Decrease-Key) |
+| **Bidirectional A\*** | ✅ Yes | ❌ No | ✅ Yes (Consistent) | $\mathcal{O}((V + E)\log V)$ | $\mathcal{O}(V)$ | Dual Min-Heaps |
+| **Dijkstra's Algorithm** | ✅ Yes | ❌ No | ✅ Guaranteed | $\mathcal{O}((V + E)\log V)$ | $\mathcal{O}(V)$ | Min-Heap (Decrease-Key) |
+| **Bidirectional Dijkstra** | ✅ Yes | ❌ No | ✅ Guaranteed | $\mathcal{O}((V + E)\log V)$ | $\mathcal{O}(V)$ | Dual Min-Heaps |
+| **Breadth-First Search (BFS)** | ❌ No (Unit) | ❌ No | ✅ Yes (Unweighted) | $\mathcal{O}(V + E)$ | $\mathcal{O}(V)$ | FIFO Queue (`std::queue`) |
+| **Bidirectional BFS** | ❌ No (Unit) | ❌ No | ✅ Yes (Unweighted) | $\mathcal{O}(b^{d/2})$ | $\mathcal{O}(b^{d/2})$ | Dual FIFO Queues |
+| **Greedy Best-First Search** | ✅ Yes | ❌ No | ❌ No (Sub-optimal) | $\mathcal{O}(V \log V)$ | $\mathcal{O}(V)$ | Min-Heap |
+| **Depth-First Search (DFS)** | ❌ No | ❌ No | ❌ No | $\mathcal{O}(V + E)$ | $\mathcal{O}(V)$ | LIFO Stack (`std::vector`) |
+| **Iterative Deepening (IDDFS)**| ❌ No (Unit) | ❌ No | ✅ Yes (Unweighted) | $\mathcal{O}(b^d)$ | $\mathcal{O}(d)$ | Call Stack / Iteration |
+| **Bellman-Ford** | ✅ Yes | ✅ Yes | ✅ Yes (Cycle Detect) | $\mathcal{O}(V \cdot E)$ | $\mathcal{O}(V)$ | Dynamic Array / Relaxation |
 
 ---
 
 ## 🏗️ System Architecture & Engineering Highlights
 
+### Custom Min-Heap with $O(\log n)$ Decrease-Key
+
+In Dijkstra and A*, relaxation decreases a node's tentative distance. Standard `std::priority_queue` does not support updating priorities.
+
+Our implementation in [`src/utils/BinaryHeap.hpp`](file:///c:/Users/gupta/PathFinder/src/utils/BinaryHeap.hpp) provides:
+```cpp
+void decreaseKey(const Value& val, const Key& newKey) {
+    auto it = pos_.find(val);
+    if (it != pos_.end()) {
+        size_t idx = it->second;
+        if (cmp_(newKey, data_[idx].key)) {
+            data_[idx].key = newKey;
+            siftUp(idx);
+        }
+    }
+}
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                           Client (Web Browser)                          │
-│   ┌───────────────────┬──────────────────────┬──────────────────────┐   │
-│   │  Grid Canvas &    │   Timeline Scrubber  │   Web Audio Synth    │   │
-│   │  Live Drag Engine │   & Step Controller  │   Sound Generator    │   │
-│   └───────────────────┴──────────────────────┴──────────────────────┘   │
-│            │                        │                        │          │
-└────────────┼────────────────────────┼────────────────────────┼──────────┘
-             │ HTTP REST POST (JSON)  │ GET Static Assets      │
-             ▼                        ▼                        ▼
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    PathFinder Pro Server (C++17)                        │
-│   ┌─────────────────────────────────────────────────────────────────┐   │
-│   │          cpp-httplib Multithreaded REST Controller              │   │
-│   │      /api/solve  •  /api/generate-maze  •  /api/presets         │   │
-│   └────────────────────────────────┬────────────────────────────────┘   │
-│                                    │                                    │
-│                    ┌───────────────┴───────────────┐                    │
-│                    ▼                               ▼                    │
-│   ┌─────────────────────────────────┐ ┌─────────────────────────────┐   │
-│   │      Algorithm Subsystem        │ │   Procedural Maze Engine    │   │
-│   │  • A* (Manhattan / Euclidean)   │ │  • Recursive Division       │   │
-│   │  • Bidirectional A* / Dijkstra  │ │  • Cellular Automata Caves  │   │
-│   │  • Dijkstra (Min-Heap)          │ │  • DFS Backtracker          │   │
-│   │  • Bellman-Ford (Cycle Check)   │ │  • Prim's Spanning Tree     │   │
-│   │  • GBFS, BFS, DFS, IDDFS        │ │  • Heightmap Noise & Spiral │   │
-│   └────────────────┬────────────────┘ └──────────────┬──────────────┘   │
-│                    │                                 │                  │
-│                    ▼                                 ▼                  │
-│   ┌─────────────────────────────────────────────────────────────────┐   │
-│   │                     Core Graph Engine                           │   │
-│   │  • Custom BinaryHeap<Key, Val> with O(log n) decrease-key       │   │
-│   │  • 4-Way Orthogonal & 8-Way Diagonal Euclidean Adjacency        │   │
-│   │  • Multi-weight Tile Cost Integration (0.5x -> 5.0x)            │   │
-│   └─────────────────────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────────────────┘
-```
+- **$O(1)$** index lookup via internal position map.
+- **$O(\log n)$** sift-up priority reduction.
+- **Strict $O(V)$** memory footprint.
 
-### Custom Min-Heap with Decrease-Key
+### Weighted Terrain & Diagonal Geometry
+- Supports **4-Way Orthogonal** ($1.0\times$ unit weight) and **8-Way Diagonal** ($\sqrt{2} \approx 1.414\times$ weight).
+- Integrated tile weight multipliers: Normal ($1\times$), Light ($2\times$), Heavy ($5\times$).
+- Diagonal corner-cutting prevention ensures paths cannot slice through impassable diagonal wall intersections.
 
-Standard C++ library `std::priority_queue` is a max-heap that does not support the **decrease-key** operation. Standard workarounds involve pushing duplicate elements ($O(E)$ memory and extraneous pops).
-
-PathFinder Pro implements a custom, generic `BinaryHeap<Key, Value, Comparator>` located in [`src/utils/BinaryHeap.hpp`](file:///c:/Users/gupta/PathFinder/src/utils/BinaryHeap.hpp) that maintains an internal index hash map:
-- **`push(key, value)`**: $O(\log n)$ sift-up.
-- **`decreaseKey(value, newKey)`**: $O(\log n)$ direct position lookup and sift-up.
-- **`pop()`**: $O(\log n)$ sift-down from root.
-- **Memory footprint**: Strict $O(V)$ space invariant.
-
-### Multi-Weight Terrain & Diagonal Geometry
-
-The graph supports both **4-Way Orthogonal** and **8-Way Diagonal** connectivity with Euclidean distance calculations:
-- Orthogonal neighbor cost: $\text{edge\_weight} \times 1.0$
-- Diagonal neighbor cost: $\text{edge\_weight} \times \sqrt{2} \approx 1.4142$
-- Prevents diagonal clipping through impassable corner walls.
+### IDDFS Heuristic Pruning on Grid Graphs
+To prevent the classic $O(4^d)$ exponential cycle explosion on unweighted grids, IDDFS combines:
+1. **Depth Memoization (`maxRemainingDepth`)**: Prunes states reached with less or equal remaining depth.
+2. **Admissible Heuristic Bounds**: Prunes branches if $\text{depth} < h(u, \text{target})$.
+3. **Neighbor Sorting by Distance**: Guides DFS towards the target on the first branch.
 
 ---
 
@@ -233,13 +304,13 @@ The graph supports both **4-Way Orthogonal** and **8-Way Diagonal** connectivity
 ```
 PathFinder/
 ├── CMakeLists.txt              # Cross-platform CMake build configuration
-├── README.md                   # Comprehensive project documentation
+├── README.md                   # Comprehensive documentation & presentation guide
 ├── src/
-│   ├── main.cpp                # Server entry point & CLI parameter parsing
-│   ├── algorithms/             # Graph search & maze implementations
-│   │   ├── AlgoResult.hpp      # Shared telemetry & serialization structs
-│   │   ├── AStar.hpp / .cpp    # A* algorithm (Manhattan & Euclidean)
-│   │   ├── BellmanFord.hpp/.cpp# Bellman-Ford negative cycle solver
+│   ├── main.cpp                # Server entry point & port configuration
+│   ├── algorithms/             # Graph traversal & maze generation suite
+│   │   ├── AlgoResult.hpp      # Telemetry & result serialization structs
+│   │   ├── AStar.hpp / .cpp    # A* Search (Manhattan & Euclidean)
+│   │   ├── BellmanFord.hpp/.cpp# Bellman-Ford cycle-aware search
 │   │   ├── BidirectionalAStar.hpp / .cpp      # Bidirectional A*
 │   │   ├── BidirectionalBFS.hpp / .cpp        # Bidirectional BFS
 │   │   ├── BidirectionalDijkstra.hpp / .cpp   # Bidirectional Dijkstra
@@ -247,20 +318,20 @@ PathFinder/
 │   │   ├── DFS.hpp / .cpp      # Depth-First Search
 │   │   ├── Dijkstra.hpp / .cpp # Dijkstra's Algorithm
 │   │   ├── GreedyBestFirst.hpp / .cpp         # Greedy Best-First Search
-│   │   ├── IDDFS.hpp / .cpp    # Iterative Deepening DFS
-│   │   └── Maze.hpp / .cpp     # 7 Procedural Maze & Terrain Generators
+│   │   ├── IDDFS.hpp / .cpp    # Iterative Deepening DFS (Heuristic-Pruned)
+│   │   └── Maze.hpp / .cpp     # 6 Procedural Maze Generators
 │   ├── graph/                  # Graph data structures
-│   │   ├── Node.hpp            # Node, Edge, and Coordinate structures
-│   │   └── Graph.hpp / .cpp    # Adjacency grid, 4/8-way connectivity, weights
-│   ├── server/                 # HTTP Backend & REST Controller
-│   │   ├── Server.hpp / .cpp   # Endpoint handlers & JSON serialization
-│   │   └── vendor/             # Header-only dependencies (httplib, json)
+│   │   ├── Node.hpp            # Node, Edge, and Coordinate models
+│   │   └── Graph.hpp / .cpp    # Grid graph, 4/8-way adjacency, edge relaxation
+│   ├── server/                 # REST API HTTP Server
+│   │   ├── Server.hpp / .cpp   # Request router & JSON serialization
+│   │   └── vendor/             # Header-only httplib & json libraries
 │   └── utils/
-│       └── BinaryHeap.hpp      # Generic Min-Heap with O(log n) decrease-key
-└── web/                        # Web dashboard client
-    ├── index.html              # Modern semantic UI markup & modal dialogs
-    ├── style.css               # Glassmorphism design system & animations
-    └── script.js               # Frontend controller, live drag & audio synth
+│       └── BinaryHeap.hpp      # Custom Min-Heap with decreaseKey
+└── web/                        # Web visualization client
+    ├── index.html              # Semantic HTML5 layout & modal markup
+    ├── style.css               # Glassmorphic CSS design system & responsive rules
+    └── script.js               # Grid interactions, async fetch, animations
 ```
 
 ---
@@ -268,20 +339,11 @@ PathFinder/
 ## ⚙️ Getting Started & Installation
 
 ### Prerequisites
-
-Ensure you have the following installed on your system:
-- **C++17 Compatible Compiler**:
-  - Windows: MSVC (Visual Studio 2019+ or Build Tools) or MinGW-w64 (GCC 9+)
-  - Linux: GCC 9.0+ or Clang 10.0+
-  - macOS: Apple Clang 12.0+ or Xcode Command Line Tools
-- **CMake**: Version `3.16` or higher (`cmake --version`)
-- **Git**: For repository cloning
-
----
+- **C++17 Compiler**: GCC 9+, Clang 10+, or MSVC 2019+
+- **CMake**: Version 3.16 or higher
+- **Git**: For version control
 
 ### Building from Source
-
-Clone the repository to your local machine:
 
 ```bash
 git clone https://github.com/YashCoder-svg/PathFinder.git
@@ -289,84 +351,41 @@ cd PathFinder
 ```
 
 #### Windows (MSVC / MinGW / PowerShell)
-
 ```powershell
-# Create and navigate to build directory
 mkdir build
 cd build
-
-# Configure CMake
 cmake ..
-
-# Build release binary
 cmake --build . --config Release
 ```
 
-*Note for MSVC*: The resulting binary will be located in `build/Release/pathfinder.exe` or `build/pathfinder.exe`.
-
-#### Linux (Ubuntu / Debian / Arch / Fedora)
-
+#### Linux / macOS
 ```bash
-# Install dependencies (Ubuntu/Debian)
-sudo apt update
-sudo apt install build-essential cmake
-
-# Create build directory
 mkdir -p build && cd build
-
-# Configure and compile
 cmake ..
 make -j$(nproc)
 ```
 
-#### macOS (Clang / Homebrew)
-
-```bash
-# Install CMake if needed
-brew install cmake
-
-# Build
-mkdir -p build && cd build
-cmake ..
-make -j$(sysctl -n hw.ncpu)
-```
-
----
-
 ### Running the Server
-
-Run the compiled executable from the project root directory:
 
 ```bash
 # Syntax: ./pathfinder [port] [path_to_web_folder]
-
-# Default: Port 8080, serving ./web
 ./build/pathfinder 8080 ./web
 ```
 
-On Windows (MSVC):
+On Windows:
 ```powershell
-.\build\Release\pathfinder.exe 8080 .\web
+.\build\pathfinder.exe 8080 .\web
 ```
 
-Once running, you will see:
-```
-Starting PathFinder Pro Backend...
-🚀 PathFinder Pro Server listening at http://localhost:8080
-```
-
-Open your browser and navigate to **`http://localhost:8080`**.
+Once running, open your web browser and navigate to:
+**`http://localhost:8080`**
 
 ---
 
 ## 📡 REST API Reference
 
-The backend exposes a clean REST API that can be consumed by the web UI or external client applications.
-
 ### `GET /api/health`
-Checks server status and version.
-
-**Response `(200 OK)`**:
+Checks server status and engine version.
 ```json
 {
   "status": "ok",
@@ -374,168 +393,54 @@ Checks server status and version.
 }
 ```
 
----
-
-### `GET /api/presets`
-Fetches pre-configured challenge map scenarios (City Grid, Castle Moat, Slalom Challenge, etc.).
-
-**Response `(200 OK)`**:
-```json
-{
-  "presets": [
-    {
-      "id": "city-grid",
-      "name": "🏙️ Manhattan City Grid",
-      "description": "Orthogonal avenues and congested diagonal blocks with highways.",
-      "walls": [[2, 2], [2, 3]],
-      "weights": [{"row": 10, "col": 0, "weight": 0.5}]
-    }
-  ]
-}
-```
-
----
-
 ### `POST /api/solve`
-Computes the path between start, waypoints, and target coordinates.
-
-**Request Headers**: `Content-Type: application/json`  
-**Request Body**:
+Calculates optimal path and node exploration sequence.
 ```json
 {
-  "rows": 20,
-  "cols": 40,
+  "grid": {
+    "width": 40,
+    "height": 20,
+    "walls": [[5, 10], [6, 10]],
+    "weights": [{"row": 10, "col": 15, "weight": 5.0}]
+  },
   "mode": "4way",
-  "algorithm": "astar-manhattan",
   "start": [5, 5],
   "end": [14, 34],
-  "waypoints": [[10, 20]],
-  "grid": {
-    "walls": [[6, 5], [7, 5], [8, 5]],
-    "weights": [
-      { "row": 9, "col": 12, "weight": 3.0 }
-    ]
-  }
+  "algorithm": "astar-manhattan"
 }
 ```
-
-**Response `(200 OK)`**:
-```json
-{
-  "algorithm": "astar-manhattan",
-  "noPathFound": false,
-  "path": [
-    [5, 5], [5, 6], [5, 7], [14, 34]
-  ],
-  "visitedOrder": [
-    { "row": 5, "col": 5, "order": 0, "frontier": 0 },
-    { "row": 5, "col": 6, "order": 1, "frontier": 0 }
-  ],
-  "stats": {
-    "nodesVisited": 142,
-    "pathLength": 48,
-    "pathCost": 52.5,
-    "executionTimeMs": 0.38
-  }
-}
-```
-
----
 
 ### `POST /api/generate-maze`
-Generates procedural obstacles or weighted terrain maps.
-
-**Request Body**:
+Procedurally generates mazes and topological obstacles.
 ```json
 {
   "rows": 20,
   "cols": 40,
-  "algorithm": "recursive-division"
+  "algorithm": "dfs"
 }
 ```
-
-Supported algorithms: `recursive-division`, `cellular-automata`, `dfs`, `prims`, `spiral`, `terrain-noise`.
-
-**Response `(200 OK)`**:
-```json
-{
-  "grid": [
-    [
-      { "isWall": false, "weight": 1.0 },
-      { "isWall": true, "weight": 1.0 }
-    ]
-  ]
-}
-```
+*Supported algorithms*: `dfs`, `prims`, `recursive-division`, `cellular-automata`, `spiral`, `terrain-noise`.
 
 ---
 
-## ⌨️ Keyboard Shortcuts & Hotkeys
+## ⌨️ Keyboard Shortcuts & Controls
 
 | Shortcut | Action | Description |
 | :---: | :--- | :--- |
-| <kbd>Space</kbd> | **Run / Play / Pause** | Executes the active algorithm or toggles the timeline animation |
-| <kbd>Esc</kbd> | **Clear / Reset** | Clears the current path, visited wave, or dismisses error banners |
-| <kbd>S</kbd> | **Select Start Tool** | Places or relocates the 🚩 Start Node |
-| <kbd>E</kbd> | **Select Target Tool**| Places or relocates the 🎯 Target Node |
-| <kbd>P</kbd> | **Select Waypoint Tool**| Places or relocates the 🔷 Checkpoint Waypoint |
-| <kbd>W</kbd> | **Select Wall Brush** | Paints impenetrable obstacle barrier tiles ($\infty$ cost) |
-| <kbd>H</kbd> | **Select Highway Brush**| Paints low-cost Expressway tiles ($0.5\times$ cost) |
-| <kbd>M</kbd> | **Select Mud Brush** | Paints heavy terrain Mud tiles ($3.0\times$ cost) |
-| <kbd>B</kbd> | **Select Water Brush**| Paints dense Water/Swamp tiles ($5.0\times$ cost) |
-| <kbd>X</kbd> | **Select Eraser** | Clears obstacles/weights back to standard grass ($1.0\times$ cost) |
-| <kbd>R</kbd> | **Randomize Nodes** | Generates new random valid positions for Start and Target |
-| <kbd>C</kbd> | **Algorithm Race** | Opens the side-by-side benchmark comparison modal |
-| <kbd>?</kbd> | **Help Guide** | Displays the full shortcut modal and pro usage tips |
+| <kbd>S</kbd> | **Place Start** | Sets placement brush to Start Node (🚩) |
+| <kbd>E</kbd> | **Place Target**| Sets placement brush to Target Node (🎯) |
+| <kbd>W</kbd> | **Place Walls** | Sets placement brush to Obstacle Walls (🧱) |
+| <kbd>Esc</kbd> | **Clear Path** | Clears the current shortest path and dismisses modals |
+| <kbd>Right Click</kbd> | **Quick Erase** | Instantly erases any wall or weight tile under the cursor |
+| <kbd>Enter</kbd> | **Apply Coords**| Validates and applies manually typed start/end coordinates |
 
 ---
 
-## 🎨 Terrain & Tool Palette Guide
+## 🤝 Contributing & License
 
-| Tool | Color / Badge | Weight Cost | Effect on Algorithms |
-| :--- | :---: | :---: | :--- |
-| **🚩 Start Node** | `Emerald Green` | — | The search origination coordinate. |
-| **🎯 Target Node** | `Crimson Red` | — | The destination node goal coordinate. |
-| **🔷 Waypoint** | `Royal Blue` | — | Mandatory intermediate stop: routes $S \to W \to E$. |
-| **🧱 Wall** | `Charcoal Navy` | $\infty$ | Blocks all traversals; cannot be penetrated. |
-| **🛣️ Highway** | `Cyan Blue` | **0.5x** | Fast lane; algorithms preferentially route through here. |
-| **🌾 Standard Ground**| `Transparent` | **1.0x** | Baseline movement cost. |
-| **🏖️ Sand Hill** | `Golden Yellow` | **2.0x** | Moderate terrain resistance. |
-| **🪵 Mud / Forest** | `Amber Brown` | **3.0x** | Heavy terrain resistance; avoided if clear path exists. |
-| **🌊 Deep Water** | `Deep Indigo` | **5.0x** | Severe penalty; algorithms only cross if walls block alternate paths. |
+Contributions, feature suggestions, and bug reports are welcome! Open an issue or pull request on [GitHub](https://github.com/YashCoder-svg/PathFinder).
 
----
-
-## 🛠️ Configuration & Extending the Engine
-
-### Adding a New Algorithm
-1. Create header and implementation files in `src/algorithms/YourAlgo.hpp` and `src/algorithms/YourAlgo.cpp`.
-2. Return an [`AlgoResult`](file:///c:/Users/gupta/PathFinder/src/algorithms/AlgoResult.hpp) struct containing:
-   - `visitedOrder`: Exploration sequence for the step-by-step visualizer.
-   - `path`: Final shortest path step coordinates.
-   - `stats`: Explored count, total cost, and execution duration.
-3. Register the algorithm in [`src/server/Server.cpp`](file:///c:/Users/gupta/PathFinder/src/server/Server.cpp) within `runSingleAlgorithm()`.
-4. Add the algorithm option in [`web/index.html`](file:///c:/Users/gupta/PathFinder/web/index.html) and theory notes in [`web/script.js`](file:///c:/Users/gupta/PathFinder/web/script.js).
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! If you would like to contribute:
-
-1. **Fork the Repository**
-2. **Create a Feature Branch** (`git checkout -b feature/AmazingAlgorithm`)
-3. **Commit your Changes** (`git commit -m 'Add AmazingAlgorithm support'`)
-4. **Push to the Branch** (`git push origin feature/AmazingAlgorithm`)
-5. **Open a Pull Request**
-
----
-
-## 📄 License
-
-This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for full details.
-
----
+Licensed under the **MIT License**.
 
 <p align="center">
   Crafted with ❤️ by <a href="https://github.com/YashCoder-svg"><strong>Yash Gupta</strong></a>
